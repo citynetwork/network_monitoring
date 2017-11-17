@@ -148,11 +148,11 @@ foreach ($data as $bgp_peer => $peerdata) {
 		$remote_as = 'iBGP';
 	}
 	else {
-		$remmote_as = $peerdata['cbgpPeer2RemoteAs'];
+		$remote_as = $peerdata['cbgpPeer2RemoteAs'];
 	}
 	if ($peerdata['cbgpPeer2AdminStatus'] == $statemapping['admin_states']['down']) {
 		$status = ($status == $STATE_OK) ? $STATE_WARNING : $status;
-		$statusstr .= " {$bgp_peer}:AdminDown({$remote_as})";
+		$status_str .= " {$bgp_peer}:AdminDown({$remote_as})";
 		continue;
 	}
 	if ($peerdata['cbgpPeer2State'] != $statemapping['bgp_states']['established']) {
