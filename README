@@ -1,8 +1,6 @@
 City Network Hosting AB - Network monitoring scripts
 
-check_ospf.php - Checks status of OSPFv2 sessions
-check_ospfv3.php - Checks status of OSPFv3 sessions
-check_bgp_cisco.php - Checks status of all BGP sessions
+Scripts in root directory of repository - Internally developed
 
 mibs/* - Mibs used by our scripts
 
