@@ -157,7 +157,7 @@ foreach ($data as $bgp_peer => $peerdata) {
 	}
 	if ($peerdata['cbgpPeer2State'] != $statemapping['bgp_states']['established']) {
 		$status = $STATE_CRITICAL;
-		$status_str .= " {$bgp_peer}:{$statemapping['bgp_states'][$peerdata['cbgpPeer2State']]}({$remote_as})";
+		$status_str .= " {$bgp_peer}:DOWN(AS{$remote_as})";
 	}
 	else { // none, idle, connect, active, opensent, openconfirm
 		continue;
