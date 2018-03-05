@@ -4,7 +4,7 @@ import argparse
 import ipaddress
 import sys
 from collections import defaultdict
-from easysnmp import snmp_get, snmp_walk, EasySNMPConnectionError, EasySNMPTimeoutError
+from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPTimeoutError
 
 # Nagios states
 STATE_OK = 0
@@ -83,7 +83,8 @@ def snmp_oid_decode_ip(oid):
 
 # Get all BGP peers
 try:
-    rawdata = snmp_walk('CISCO-BGP4-MIB::cbgpPeer2Table', hostname=args.H, community=args.C, version=2)
+    oids = ['CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier','CISCO-BGP4-MIB::cbgpPeer2AdminStatus','CISCO-BGP4-MIB::cbgpPeer2State','CISCO-BGP4-MIB::cbgpPeer2LastErrorTxt', 'CISCO-BGP4-MIB::cbgpPeer2RemoteAs']
+    rawdata = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2)
 except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
     snmp_err(err)
 
@@ -104,20 +105,21 @@ for index, peer in data.iteritems():
     admin_state = peer['cbgpPeer2AdminStatus'].value
     bgp_state = peer['cbgpPeer2State'].value
     last_error = peer['cbgpPeer2LastErrorTxt'].value
+    remote_as = peer['cbgpPeer2RemoteAs'].value
     if not last_error.strip():
         last_error = 'None'
 
     if admin_state == 1:  # Down
-        trigger_not_ok(STATE_WARN, "{} admin down".format(peername))
+        trigger_not_ok(STATE_WARN, "{}(AS{}) admin down".format(peername, remote_as))
         continue
     if bgp_state in [0, 1, 2, 3, 4, 5]:  # none/idle/connect/active/opensent/openconfirm
-        trigger_not_ok(STATE_CRIT, "{} BGP session down".format(peername))
+        trigger_not_ok(STATE_CRIT, "{}(AS{}) BGP session down".format(peername, remote_as))
         continue
     statusstr = last_error
 
 # All checks completed, exiting with the relevant message
 if status == STATE_OK:
-    statusstr = "OK: BGP session with {} established, last error: ".format(args.p, statusstr)
+    statusstr = "OK: BGP session with {}(AS{}) established, last error: {}".format(args.p, remote_as, statusstr)
 elif status == STATE_WARN:
     statusstr = "WARNING:" + statusstr
 elif status == STATE_CRIT:
