@@ -3,7 +3,7 @@
 import sys
 import argparse
 from collections import defaultdict
-from easysnmp import snmp_get, snmp_walk, EasySNMPConnectionError, EasySNMPTimeoutError
+from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPTimeoutError
 
 # Nagios states
 STATE_OK = 0
@@ -51,7 +51,8 @@ local_as = my_snmp_get('BGP4-MIB::bgpLocalAs.0').value
 
 # Get all BGP peers
 try:
-    rawdata = snmp_walk('CISCO-BGP4-MIB::cbgpPeer2Table', hostname=args.H, community=args.C, version=2)
+    oids = ['CISCO-BGP4-MIB::cbgpPeer2RemoteAs','CISCO-BGP4-MIB::cbgpPeer2AdminStatus','CISCO-BGP4-MIB::cbgpPeer2State','CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier']
+    rawdata = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2)
 except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
     snmp_err(err)
 
