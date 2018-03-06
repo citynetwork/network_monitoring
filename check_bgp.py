@@ -23,8 +23,9 @@ parser.add_argument('-p', metavar='<peer>', required=True,
 args = parser.parse_args()
 
 # Expand IPv6
+orig_args_p = args.p
 if ':' in args.p:
-    addr = ipaddress.ip_address(args.p)
+    addr = ipaddress.ip_address(unicode(args.p))
     args.p = addr.exploded.lower()
 
 
@@ -78,7 +79,10 @@ def snmp_oid_decode_ip(oid):
             if i % 2 == 0:
                 ip_decoded += ':'
             i += 1
-        return ip_decoded.lower()
+        if isinstance(ip_decoded, unicode):
+            return ip_decoded.lower().rstrip(':')
+        else:
+            return unicode(ip_decoded.lower().rstrip(':'))
 
 
 # Get all BGP peers
@@ -97,6 +101,7 @@ status = STATE_OK
 statusstr = ''
 
 # Now loop over data, and check the states
+remote_as = ""
 for index, peer in data.iteritems():
     peer_ip = snmp_oid_decode_ip(index)
     if peer_ip != args.p:
@@ -106,6 +111,7 @@ for index, peer in data.iteritems():
     bgp_state = peer['cbgpPeer2State'].value
     last_error = peer['cbgpPeer2LastErrorTxt'].value
     remote_as = peer['cbgpPeer2RemoteAs'].value
+
     if not last_error.strip():
         last_error = 'None'
 
@@ -119,7 +125,7 @@ for index, peer in data.iteritems():
 
 # All checks completed, exiting with the relevant message
 if status == STATE_OK:
-    statusstr = "OK: BGP session with {}(AS{}) established, last error: {}".format(args.p, remote_as, statusstr)
+    statusstr = "OK: BGP session with {}(AS{}) established, last error: {}".format(orig_args_p, remote_as, statusstr)
 elif status == STATE_WARN:
     statusstr = "WARNING:" + statusstr
 elif status == STATE_CRIT:
