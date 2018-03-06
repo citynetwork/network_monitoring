@@ -2,6 +2,9 @@ City Network Hosting AB - Network monitoring scripts
 
 Scripts in root directory of repository - Internally developed
 
-mibs/* - Mibs used by our scripts
+dev/* - Scripts used during development
 
 imported/* - Scripts we didn't write but which we use
+
+mibs/* - Mibs used by our scripts
+
