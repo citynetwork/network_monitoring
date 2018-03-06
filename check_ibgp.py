@@ -65,9 +65,11 @@ status = STATE_OK
 statusstr = ''
 
 # Now loop over data, and for _iBGP_ check the states
+num_ibgp = 0
 for index, peer in data.iteritems():
     if local_as not in peer['cbgpPeer2RemoteAs'].value:
         continue
+    num_ibgp += 1
     peername = peer['cbgpPeer2RemoteIdentifier'].value
     admin_state = peer['cbgpPeer2AdminStatus'].value
     bgp_state = peer['cbgpPeer2State'].value
@@ -80,7 +82,7 @@ for index, peer in data.iteritems():
 
 # All checks completed, exiting with the relevant message
 if status == STATE_OK:
-    statusstr = "OK: All iBGP sessions established"
+    statusstr = "OK: All ({}) iBGP sessions established".format(num_ibgp)
 elif status == STATE_WARN:
     statusstr = "WARNING:" + statusstr
 elif status == STATE_CRIT:
