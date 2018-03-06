@@ -101,11 +101,13 @@ status = STATE_OK
 statusstr = ''
 
 # Now loop over data, and check the states
+peer_found = False
 remote_as = ""
 for index, peer in data.iteritems():
     peer_ip = snmp_oid_decode_ip(index)
     if peer_ip != args.p:
         continue
+    peer_found = True
     peername = peer['cbgpPeer2RemoteIdentifier'].value
     admin_state = peer['cbgpPeer2AdminStatus'].value
     bgp_state = peer['cbgpPeer2State'].value
@@ -122,6 +124,8 @@ for index, peer in data.iteritems():
         trigger_not_ok(STATE_CRIT, "{}(AS{}) BGP session down".format(peername, remote_as))
         continue
     statusstr = last_error
+if not peer_found:
+    trigger_not_ok(STATE_CRIT, "BGP session for peer {} not found!".format(orig_args_p))
 
 # All checks completed, exiting with the relevant message
 if status == STATE_OK:
