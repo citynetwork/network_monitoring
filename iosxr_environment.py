@@ -12,7 +12,7 @@ STATE_CRIT = 2
 STATE_UNKNOWN = 3
 
 # Argument parsing
-parser = argparse.ArgumentParser(description='Check environment of ASR9k routers')
+parser = argparse.ArgumentParser(description='Check environment of IOS-XR routers')
 parser.add_argument('-C', metavar='<community>', required=True,
 		    help='SNMP Community')
 parser.add_argument('-H', metavar='<host>', required=True,
@@ -67,7 +67,7 @@ for index in data:
     # First off we'll try getting some Power status for those that support it
     # 1/on - Admin power on
     # 2/off - Admin power off
-    # 3/inlineAuto,4/inlineOn,5/powerCycle - PoE stuff, irrelevant for ASR9k
+    # 3/inlineAuto,4/inlineOn,5/powerCycle - PoE stuff, irrelevant for us so not much caring here
     # cefcFRUPowerAdminStatus - 1=on, 2=off, 3=inlineAuto, 4=inlineOn, 5=powerCycle
     pwr_adminstatus = my_snmp_get("CISCO-ENTITY-FRU-CONTROL-MIB::cefcFRUPowerAdminStatus.{0}".format(index))
     if 'NOSUCHINSTANCE' not in pwr_adminstatus.value:
