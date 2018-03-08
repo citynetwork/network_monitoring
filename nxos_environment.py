@@ -14,9 +14,9 @@ STATE_UNKNOWN = 3
 # Argument parsing
 parser = argparse.ArgumentParser(description='Check environment of NX-OS switches')
 parser.add_argument('-C', metavar='<community>', required=True,
-		    help='SNMP Community')
+                    help='SNMP Community')
 parser.add_argument('-H', metavar='<host>', required=True,
-		    help='Host to check')
+                    help='Host to check')
 args = parser.parse_args()
 
 
@@ -72,15 +72,15 @@ for index in data:
     pwr_adminstatus = my_snmp_get("CISCO-ENTITY-FRU-CONTROL-MIB::cefcFRUPowerAdminStatus.{0}".format(index))
     if 'NOSUCHINSTANCE' not in pwr_adminstatus.value:
         if pwr_adminstatus.value == "1":
-            pass # ok
+            pass  # ok
         elif pwr_adminstatus == "2":
             trigger_not_ok(STATE_WARN, "PowerAdminStatus Off for {0}".format(descr))
         elif pwr_adminstatus == "3":
-            pass # ok - PoE stuff
+            pass  # ok - PoE stuff
         elif pwr_adminstatus == "4":
-            pass # ok - PoE stuff
+            pass  # ok - PoE stuff
         elif pwr_adminstatus == "5":
-            pass # ok - PoE stuff
+            pass  # ok - PoE stuff
 
     # cefcFRUPowerOperStatus
     # 1/offenvOther - Specifies that FRU is powered off because of a problem not listed below
@@ -99,7 +99,7 @@ for index in data:
         if pwr_operstatus.value == "1":
             trigger_not_ok(STATE_CRIT, "PowerOperStatus off due to unknown problems for {0}".format(descr))
         if pwr_operstatus.value == "2":
-            pass # ok
+            pass  # ok
         if pwr_operstatus.value == "3":
             trigger_not_ok(STATE_WARN, "PowerOperStatus Admin off for {0}".format(descr))
         if pwr_operstatus.value == "4":
@@ -124,9 +124,9 @@ for index in data:
     sensorstatus = my_snmp_get("CISCO-ENTITY-SENSOR-MIB::entSensorStatus.{0}".format(index))
     if 'NOSUCHINSTANCE' not in sensorstatus.value:
         if sensorstatus.value == "1":
-            pass # ok
+            pass  # ok
         elif sensorstatus.value == "2" and 'transceiver' in descr.lower():
-            pass # Also ok, because all transceivers are not equipped with that
+            pass  # Also ok, because all transceivers are not equipped with that
         elif sensorstatus.value == "2":
             trigger_not_ok(STATE_WARN, " Unavailable sensor status for {0}".format(descr))
         elif sensorstatus.value == "3":

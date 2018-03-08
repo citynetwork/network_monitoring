@@ -87,7 +87,13 @@ def snmp_oid_decode_ip(oid):
 
 # Get all BGP peers
 try:
-    oids = ['CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier','CISCO-BGP4-MIB::cbgpPeer2AdminStatus','CISCO-BGP4-MIB::cbgpPeer2State','CISCO-BGP4-MIB::cbgpPeer2LastErrorTxt', 'CISCO-BGP4-MIB::cbgpPeer2RemoteAs']
+    oids = [
+            'CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier',
+            'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
+            'CISCO-BGP4-MIB::cbgpPeer2State',
+            'CISCO-BGP4-MIB::cbgpPeer2LastErrorTxt',
+            'CISCO-BGP4-MIB::cbgpPeer2RemoteAs'
+    ]
     rawdata = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2)
 except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
     snmp_err(err)

@@ -14,9 +14,9 @@ STATE_UNKNOWN = 3
 # Argument parsing
 parser = argparse.ArgumentParser(description='Check iBGP session status')
 parser.add_argument('-C', metavar='<community>', required=True,
-		    help='SNMP Community')
+                    help='SNMP Community')
 parser.add_argument('-H', metavar='<host>', required=True,
-		    help='Host to check')
+                    help='Host to check')
 args = parser.parse_args()
 
 
@@ -51,7 +51,12 @@ local_as = my_snmp_get('BGP4-MIB::bgpLocalAs.0').value
 
 # Get all BGP peers
 try:
-    oids = ['CISCO-BGP4-MIB::cbgpPeer2RemoteAs','CISCO-BGP4-MIB::cbgpPeer2AdminStatus','CISCO-BGP4-MIB::cbgpPeer2State','CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier']
+    oids = [
+            'CISCO-BGP4-MIB::cbgpPeer2RemoteAs',
+            'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
+            'CISCO-BGP4-MIB::cbgpPeer2State',
+            'CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier'
+    ]
     rawdata = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2)
 except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
     snmp_err(err)

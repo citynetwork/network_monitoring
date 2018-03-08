@@ -12,7 +12,7 @@ STATE_CRIT = 2
 STATE_UNKNOWN = 3
 
 # Defaults
-vpls_vcid_range = xrange(1,4096)
+vpls_vcid_range = xrange(1, 4096)
 cpw_oper_status_mapping = {
         "1": "up",
         "2": "down",
@@ -25,9 +25,9 @@ cpw_oper_status_mapping = {
 # Argument parsing
 parser = argparse.ArgumentParser(description='Check MPLS L2VPN status')
 parser.add_argument('-C', metavar='<community>', required=True,
-		    help='SNMP Community')
+                    help='SNMP Community')
 parser.add_argument('-H', metavar='<host>', required=True,
-		    help='Host to check')
+                    help='Host to check')
 args = parser.parse_args()
 
 
@@ -61,17 +61,13 @@ def trigger_not_ok(req_state, txt):
 try:
     oids = [
             'CISCO-IETF-PW-MIB::cpwVcPsnType',
-            #'CISCO-IETF-PW-MIB::cpwVcPeerAddr',
-            #'CISCO-IETF-PW-MIB::cpwVcPeerAddrType',
             'CISCO-IETF-PW-MIB::cpwVcID',
             'CISCO-IETF-PW-MIB::cpwVcLocalIfMtu',
             'CISCO-IETF-PW-MIB::cpwVcRemoteIfMtu',
             'CISCO-IETF-PW-MIB::cpwVcInboundOperStatus',
             'CISCO-IETF-PW-MIB::cpwVcOutboundOperStatus',
             'CISCO-IETF-PW-MIB::cpwVcAdminStatus',
-            'CISCO-IETF-PW-MIB::cpwVcOperStatus',
-            #'CISCO-IETF-PW-MIB::cpwVcName', # These two only used for EoMPLS
-            #'CISCO-IETF-PW-MIB::cpwVcDescr'
+            'CISCO-IETF-PW-MIB::cpwVcOperStatus'
     ]
     rawdata = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2)
 except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
@@ -115,7 +111,7 @@ for index, vc in data.iteritems():
                 mpls_vc_type,
                 vc['cpwVcID'].value)
             )
-        if status == STATE_CRIT: # No point in checking more minor issues if OperStatus isn't up
+        if status == STATE_CRIT:  # No point in checking more minor issues if OperStatus isn't up
             continue
 
     else:
