@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import os, sys, filecmp, imp
+import os
+import sys
+import filecmp
+import imp
 from shutil import copyfile
 
 try:
@@ -7,6 +10,13 @@ try:
 except ImportError:
     print "Error: You need to install python module easysnmp!"
     print "Eg. pip install easysnmp"
+    sys.exit(1)
+
+try:
+    imp.find_module('dateutil')
+except ImportError:
+    print "Error: You need to install python module dateutil!"
+    print "Eg. pip install dateutil"
     sys.exit(1)
 
 mibs_source = './mibs'
