@@ -88,7 +88,6 @@ def snmp_oid_decode_ip(oid):
 # Get all BGP peers
 try:
     oids = [
-            'CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier',
             'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
             'CISCO-BGP4-MIB::cbgpPeer2State',
             'CISCO-BGP4-MIB::cbgpPeer2LastErrorTxt',
@@ -114,7 +113,6 @@ for index, peer in data.iteritems():
     if peer_ip != args.p:
         continue
     peer_found = True
-    peername = peer['cbgpPeer2RemoteIdentifier'].value
     admin_state = peer['cbgpPeer2AdminStatus'].value
     bgp_state = peer['cbgpPeer2State'].value
     last_error = peer['cbgpPeer2LastErrorTxt'].value
@@ -123,11 +121,13 @@ for index, peer in data.iteritems():
     if not last_error.strip():
         last_error = 'None'
 
+    admin_state = int(str(admin_state))
     if admin_state == 1:  # Down
-        trigger_not_ok(STATE_WARN, "{}(AS{}) admin down".format(peername, remote_as))
+        trigger_not_ok(STATE_WARN, "{}(AS{}) admin down".format(orig_args_p, remote_as))
         continue
+    bgp_state = int(str(bgp_state))
     if bgp_state in [0, 1, 2, 3, 4, 5]:  # none/idle/connect/active/opensent/openconfirm
-        trigger_not_ok(STATE_CRIT, "{}(AS{}) BGP session down".format(peername, remote_as))
+        trigger_not_ok(STATE_CRIT, "{}(AS{}) BGP session down".format(orig_args_p, remote_as))
         continue
     statusstr = last_error
 if not peer_found:
