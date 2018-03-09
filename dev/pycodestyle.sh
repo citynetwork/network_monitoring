@@ -2,7 +2,7 @@
 
 for A in $(ls | grep -E '\.py$'); do
 	echo "$A:"
-	pycodestyle $A | grep -v E501
+	pycodestyle $A | grep -vE 'E(501|402)'
 	echo
 	echo
 done

@@ -6,5 +6,4 @@ dev/* - Scripts used during development
 
 imported/* - Scripts we didn't write but which we use
 
-mibs/* - Mibs used by our scripts
-
+setup.py - Will check that all dependencies are in place, and auto-download all Cisco MIBs

@@ -1,39 +1,58 @@
 #!/usr/bin/env python
 import os
 import sys
-import filecmp
 import imp
-from shutil import copyfile
+from tempfile import mkstemp
+import tarfile
+from shutil import copyfile, rmtree
+from urlparse import urlparse
 
-try:
-    imp.find_module('easysnmp')
-except ImportError:
-    print "Error: You need to install python module easysnmp!"
-    print "Eg. pip install easysnmp"
-    sys.exit(1)
-
-try:
-    imp.find_module('dateutil')
-except ImportError:
-    print "Error: You need to install python module dateutil!"
-    print "Eg. pip install dateutil"
-    sys.exit(1)
-
-mibs_source = './mibs'
+external_deps = ['ftputil', 'easysnmp', 'dateutil']
+cisco_miburl = urlparse("ftp://ftp.cisco.com/pub/mibs/v2/v2.tar.gz")
 mibs_dest = '/usr/share/snmp/mibs'
 
-for mib in os.listdir(mibs_source):
-    srcmib = "{}/{}".format(mibs_source, mib)
-    destmib = "{}/{}".format(mibs_dest, mib)
-    if os.path.exists(destmib):
-        if not os.path.isfile(destmib):
-            raise('{} exists and is not a file!'.format(destmib))
-            sys.exit(1)
-        else:
-            if filecmp.cmp(srcmib, destmib):
+
+try:
+    for dep in external_deps:
+        imp.find_module(dep)
+except ImportError:
+    deplist = ", ".join(external_deps)
+    print "Unmet dependencies, the following external dependencies are required: {}".format(deplist)
+
+
+from ftputil import FTPHost
+
+
+print "Downloading required mibs..."
+with FTPHost(cisco_miburl.netloc, 'anonymous', 'anonymous') as host:
+    if host.path.isfile(cisco_miburl.path):
+        tempfile = mkstemp(suffix='.tar.gz')[1]
+        host.download(cisco_miburl.path, tempfile)
+        print "Unpacking tarball..."
+        tar = tarfile.open(tempfile)
+        tar.extractall()
+        tar.close()
+        os.unlink(tempfile)
+        print "Installing MIBs..."
+        for mib in os.listdir("./auto/mibs/v2"):
+            if not mib.endswith(".my"):
+                continue
+            srcmib = "auto/mibs/v2/{}".format(mib)
+            destmib = "{}/{}".format(mibs_dest, mib)
+            if os.path.exists(destmib):
                 continue
             else:
-                copyfile(srcmib, destmib)
+                try:
+                    copyfile(srcmib, destmib)
+                except IOError:
+                    print "Failed to copy mibs, not running as root?"
+                    rmtree('./auto')
+                    sys.exit(1)
+        rmtree('./auto')
     else:
-        copyfile(srcmib, destmib)
+        raise('Failed to download {} from {}'.format(cisco_miburl.path, cisco_miburl.netloc))
+        sys.exit(1)
+
+
+print "Done."
 sys.exit(0)
