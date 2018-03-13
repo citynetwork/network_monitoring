@@ -9,6 +9,8 @@ import sys
 from collections import defaultdict
 from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPTimeoutError
 from struct import unpack
+from time import mktime
+from dateutil.parser import parse
 
 # Nagios states
 STATE_OK = 0
@@ -96,6 +98,41 @@ def parse_snmp_datetime(input):
     return dt
 
 
+# Convert output of parse_snmp_datetime into a timestamp
+def strtime_to_timestamp(input):
+    return int(mktime(parse(input).timetuple()))
+
+
 # Parse Dell timeticks
 def dell_parse_snmp_uptime(timeticks):
     return int(str(timeticks)[:-2])
+
+
+# Detecting IP version of SNMP OID index
+def snmp_oid_ipver(oid):
+    if oid.startswith("1.4"):
+        return 'IPv4'
+    elif oid.startswith("2.16"):
+        return 'IPv6'
+    else:
+        return None
+
+
+# Decoding IP from SNMP OID index
+def snmp_oid_decode_ip(oid):
+    ipver = snmp_oid_ipver(oid)
+    if 'IPv4' == ipver:
+        return oid[4:]
+    else:
+        ip_coded = oid[5:].split('.')
+        ip_decoded = ""
+        i = 1
+        for part in ip_coded:
+            ip_decoded += str(hex(int(part, 10)))[2:].zfill(2)
+            if i % 2 == 0:
+                ip_decoded += ':'
+            i += 1
+        if isinstance(ip_decoded, unicode):
+            return ip_decoded.lower().rstrip(':')
+        else:
+            return unicode(ip_decoded.lower().rstrip(':'))
