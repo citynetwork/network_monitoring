@@ -24,7 +24,7 @@ args = parser.parse_args()
 # Get all environmental modules and put in a nicely ordered dict
 rawdata = my_snmp_walk(args, 'ENTITY-MIB::entPhysicalTable')
 data = snmpresult_to_dict(rawdata)
-from pprint import pprint
+
 
 # Now we loop over the data and perform poweradmin/poweroper/sensorstatus checks
 status = STATE_OK
