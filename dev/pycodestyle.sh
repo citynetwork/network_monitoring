@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for A in $(ls | grep -E '\.py$'); do
+for A in *.py lib/*.py; do
 	echo "$A:"
 	pycodestyle $A | grep -vE 'E(501|402)'
 	echo

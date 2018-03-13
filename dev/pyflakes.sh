@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for A in $(ls | grep -E '\.py$'); do
+for A in *.py lib/*.py; do
 	echo "$A:"
 	pyflakes $A
 	echo
