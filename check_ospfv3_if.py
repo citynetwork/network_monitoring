@@ -1,14 +1,16 @@
 #!/usr/bin/env python
+#
+# @descr    Checks OSPFv3 sessions on Cisco IOS devices
+#
+# @author   Johan Hedberg <jh@citynetwork.se>
+#
 
 import sys
 import argparse
-from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPTimeoutError
+from lib.cnh_nm import STATE_OK, STATE_CRIT
+from lib.cnh_nm import my_snmp_walk
+from lib.cnh_nm import trigger_not_ok, check_if_ok
 
-# Nagios states
-STATE_OK = 0
-STATE_WARN = 1
-STATE_CRIT = 2
-STATE_UNKNOWN = 3
 
 # Vars
 ospfv3_statemappings = {
@@ -23,6 +25,7 @@ ospfv3_statemappings = {
 }
 ospfv3_ok_states = [4, 8]
 
+
 # Argument parsing
 parser = argparse.ArgumentParser(description='Check OSPFv3 session status for interface')
 parser.add_argument('-C', metavar='<community>', required=True,
@@ -34,50 +37,16 @@ parser.add_argument('-i', metavar='<interface>', required=True,
 args = parser.parse_args()
 
 
-# Handle (or rather not handle) SNMP errors
-def snmp_err(err):
-    global STATE_UNKNOWN
-    print "UNKNOWN: SNMP Error: {0}".format(err)
-    sys.exit(STATE_UNKNOWN)
-
-
-# SNMP get wrapper with error handling
-def my_snmp_get(oid):
-    global args
-    try:
-        retval = snmp_get(oid, hostname=args.H, community=args.C, version=2)
-    except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
-        snmp_err(err)
-    return retval
-
-
-# Status change wrapper
-def trigger_not_ok(req_state, txt):
-    global status
-    global statusstr
-    if req_state > status:
-        status = req_state
-    statusstr += txt + ","
-
-
 # Get all interfaces, and then get OSPFv3 data for that interface
-try:
-    rawdata = snmp_bulkwalk('IF-MIB::ifDescr', hostname=args.H, community=args.C, version=2)
-    interface = None
-    for obj in rawdata:
-        if str(obj.value) == args.i:
-            interface = obj
-    if not interface:
-        print "CRITICAL: Interface {} not found!".format(args.i)
-        sys.exit(STATE_CRIT)
-    rawdata = snmp_bulkwalk(
-            'OSPFV3-MIB::ospfv3NbrState.{}'.format(interface.oid_index),
-            hostname=args.H,
-            community=args.C,
-            version=2
-    )
-except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
-    snmp_err(err)
+rawdata = my_snmp_walk(args, 'IF-MIB::ifDescr')
+interface = None
+for obj in rawdata:
+    if str(obj.value) == args.i:
+        interface = obj
+if not interface:
+    print "CRITICAL: Interface {} not found!".format(args.i)
+    sys.exit(STATE_CRIT)
+rawdata = my_snmp_walk(args, 'OSPFV3-MIB::ospfv3NbrState.{}'.format(interface.oid_index))
 
 
 # Check for neighbours and their states
@@ -89,21 +58,22 @@ for nei in rawdata:
     num_neis += 1
     nei_state = int(str(nei.value))
     if nei_state not in ospfv3_ok_states:
-        trigger_not_ok(STATE_CRIT, "Neighbour {} on interface {} down".format(num_neis, args.i))
-
-if status != STATE_OK:
-    if status == STATE_WARN:
-        statusstr = "WARNING:" + statusstr
-    else:
-        statusstr = "CRITICAL:" + statusstr
-    print statusstr
-    sys.exit(status)
+        trigger_not_ok(
+                status,
+                statusstr,
+                STATE_CRIT,
+                "Neighbour {} on interface {} down".format(num_neis, args.i))
 
 if num_neis < 1:
-    print "CRITICAL: No OSPFv3 neighbours found on interface {}".format(args.i)
-    sys.exit(STATE_CRIT)
+    trigger_not_ok(
+            status,
+            statusstr,
+            STATE_CRIT,
+            "CRITICAL: No OSPFv3 neighbours found on interface {}".format(args.i))
 
 
-# All good
+# Check status
+check_if_ok(status, statusstr)
+
 print "OK: All {} neighbours on interface {} is up".format(num_neis, args.i)
 sys.exit(STATE_OK)
