@@ -8,8 +8,8 @@
 import sys
 import argparse
 from lib.cnh_nm import STATE_OK, STATE_CRIT, STATE_WARN
-from lib.cnh.nm import trigger_not_ok, check_if_ok, my_snmp_get, my_snmp_walk, my_snmp_get_int
-from lib.cnh.nm import dell_parse_snmp_uptime, snmpresult_to_dict
+from lib.cnh_nm import trigger_not_ok, check_if_ok, my_snmp_get, my_snmp_walk, my_snmp_get_int
+from lib.cnh_nm import dell_parse_snmp_uptime, snmpresult_to_dict
 
 # Argument parsing
 parser = argparse.ArgumentParser(description='Check FTOS environmental status')
