@@ -48,11 +48,7 @@ oid_psu_oper = '.1.3.6.1.4.1.6027.3.26.1.4.6.1.4.2.{}.{}'  # dellNetPowerSupplyO
 oid_psu_usage = '.1.3.6.1.4.1.6027.3.26.1.4.6.1.10.2.{}.{}'  # dellNetPowerSupplyUsage
 oid_fans_oper = '.1.3.6.1.4.1.6027.3.26.1.4.7.1.4.2.{}.{}'  # dellNetFanTrayOperStatus
 oid_mem_usage = '.1.3.6.1.4.1.6027.3.26.1.4.4.1.6.2.{}.1'  # dellNetCpuUtilMemUsage
-oid_cpu_usage = '.1.3.6.1.4.1.6027.3.26.1.4.4.1.4.2.{}.1'  # dellNetCpuUtilMemUsage
-oids_system = [
-        'DELL-NETWORKING-CHASSIS-MIB::dellNetCpuUtil1Min.stack',
-        'DELL-NETWORKING-CHASSIS-MIB::dellNetCpuUtilMemUsage.stack'
-]
+oid_cpu_usage = '.1.3.6.1.4.1.6027.3.26.1.4.4.1.4.2.{}.1'  # dellNetCpuUtil1Min
 
 
 # Checking system status
