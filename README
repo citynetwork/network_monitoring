@@ -26,3 +26,4 @@ Cisco IOS-XR/XE and NX-OS:
 
 Dell (former Force10) FTOS:
 	ftos_chassis.py
+	ftos_vlt.py
