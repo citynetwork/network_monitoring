@@ -14,6 +14,7 @@ Cisco IOS:
 	check_ibgp.py
 	check_mpls_l2vpn.py
 	check_vss_status.py
+	check_ospf.py
 	check_ospfv3_if.py
 	cisco_entity_sensors.py (Works but very limited functionality)
 
@@ -21,6 +22,7 @@ Cisco IOS-XR/XE and NX-OS:
 	check_bgp.py
 	check_ibgp.py
 	check_mpls_l2vpn.py
+	check_ospf.py
 	check_ospfv3_if.py
 	cisco_entity_sensors.py
 
@@ -29,3 +31,4 @@ Dell (former Force10) FTOS:
 	ftos_vlt.py
 	ftos_bgp_peer.py
 	ftos_ibgp.py
+	check_ospf.py
