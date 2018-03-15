@@ -11,6 +11,7 @@ from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPT
 from struct import unpack
 from time import mktime
 from dateutil.parser import parse
+from ipaddress import ip_address
 
 # Nagios states
 STATE_OK = 0
@@ -136,3 +137,24 @@ def snmp_oid_decode_ip(oid):
             return ip_decoded.lower().rstrip(':')
         else:
             return unicode(ip_decoded.lower().rstrip(':'))
+
+
+# Decode the dellNetBgpM2PeerRemoteAddr field from FTOS devices
+def ftos_get_peer_ip(peeraddr, peeraddr_type):
+    packed = peeraddr.value.encode('latin1')
+    if int(str(peeraddr_type.value)) == 1:  # IPv4
+        int_tuple = unpack('>BBBB', packed)
+        str_tuple = [str(item) for item in int_tuple]
+        return ".".join(str_tuple)
+    else:  # IPv6
+        int_tuple = unpack('>BBBBBBBBBBBBBBBB', packed)
+        str_tuple = [str(hex(item))[2:].zfill(2) for item in int_tuple]
+        ip6_decoded = ""
+        i = 1
+        for part in str_tuple:
+            ip6_decoded += part
+            if i % 2 == 0:
+                ip6_decoded += ':'
+            i += 1
+        ip6 = ip_address(unicode(ip6_decoded.rstrip(':')))
+        return str(ip6.compressed)
