@@ -48,14 +48,14 @@ for index, peer in data.iteritems():
     admin_state = peer['cbgpPeer2AdminStatus'].value
     bgp_state = peer['cbgpPeer2State'].value
     if admin_state == 1:  # Down
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
                 "{} admin down".format(peername))
         continue
     if bgp_state in [0, 1, 2, 3, 4, 5]:  # none/idle/connect/active/opensent/openconfirm
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,

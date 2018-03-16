@@ -62,7 +62,7 @@ for index, vc in data.iteritems():
     # Check VC status
     if vc['cpwVcAdminStatus'].value == u'1':
         if vc['cpwVcOperStatus'].value != u'1':
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
@@ -73,7 +73,7 @@ for index, vc in data.iteritems():
             )
             continue
         if vc['cpwVcInboundOperStatus'].value != '1':
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
@@ -83,7 +83,7 @@ for index, vc in data.iteritems():
                             vc['cpwVcID'].value)
             )
         if vc['cpwVcOutboundOperStatus'].value != '1':
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
@@ -96,7 +96,7 @@ for index, vc in data.iteritems():
             continue
 
     else:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
@@ -108,7 +108,7 @@ for index, vc in data.iteritems():
 
     # Check for MTU mismatches
     if vc['cpwVcLocalIfMtu'].value != vc['cpwVcRemoteIfMtu'].value:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,

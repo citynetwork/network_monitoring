@@ -99,13 +99,13 @@ chassis2_tt = float(int(str(chassis1['cvsChassisUpTime'].value)))*0.01
 if chassis1_tt < vss_uptime_warn:
     chassis1_str = "Chassis 1 uptime {} seconds".format(int(chassis1_tt))
     if chassis1_tt < vss_uptime_crit:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 chassis1_str)
     else:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
@@ -113,13 +113,13 @@ if chassis1_tt < vss_uptime_warn:
 if chassis2_tt < vss_uptime_warn:
     chassis2_str = "Chassis 2 uptime {} seconds".format(int(chassis2_tt))
     if chassis2_tt < vss_uptime_crit:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 chassis2_str)
     else:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
@@ -136,13 +136,13 @@ chassis2_vsl = VSL[list(VSL.keys())[1]]
 status = STATE_OK
 statusstr = ""
 if chassis1_vsl['cvsVSLConnectOperStatus'].value != u'1':
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
             "Chassis 1 VSL ports down")
 if chassis2_vsl['cvsVSLConnectOperStatus'].value != u'1':
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
@@ -155,14 +155,14 @@ status = STATE_OK
 statusstr = ""
 if chassis1_vsl['cvsVSLConfiguredPortCount'].value != chassis1_vsl['cvsVSLOperationalPortCount'].value:
     ports_down = int(chassis1_vsl['cvsVSLConfiguredPortCount'].value) - int(chassis1_vsl['cvsVSLOperationalPortCount'].value)
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
             "{} VSL ports down on Chassis 1".format(ports_down))
 if chassis2_vsl['cvsVSLConfiguredPortCount'].value != chassis2_vsl['cvsVSLOperationalPortCount'].value:
     ports_down = int(chassis2_vsl['cvsVSLConfiguredPortCount'].value) - int(chassis2_vsl['cvsVSLOperationalPortCount'].value)
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
@@ -182,13 +182,13 @@ cur_time = int(time())
 if (cur_time - chassis1_ts) < vsl_statechange_warn:
     chassis1_str = "Chassis 1 VSL statechange {} seconds ago".format(cur_time - chassis1_ts)
     if (cur_time - chassis1_ts) < vsl_statechange_crit:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 chassis1_str)
     else:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
@@ -196,13 +196,13 @@ if (cur_time - chassis1_ts) < vsl_statechange_warn:
 if (cur_time - chassis2_ts) < vsl_statechange_warn:
     chassis2_str = "Chassis 2 VSL statechange {} seconds ago".format(cur_time - chassis2_ts)
     if (cur_time - chassis2_ts) < vsl_statechange_crit:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 chassis2_str)
     else:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,

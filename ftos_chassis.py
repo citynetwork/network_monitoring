@@ -97,32 +97,32 @@ for index, su in stackunit_status.iteritems():
         unit_status_label = 'dellNetStackUnitStatus'
     unit_status = int(str(su[unit_status_label].value))
     if unit_status == 2:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 'Stack-unit {} is unsupported'.format(index))
     elif unit_status == 3:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 STATE_WARN,
                 'Stack-unit {} has software image version mismatch'.format(index))
     elif unit_status == 4:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
                 'Stack-unit {} has configuration mismatch'.format(index))
     elif unit_status == 5:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 'Stack-unit {} is DOWN'.format(index))
     elif unit_status == 6:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
@@ -136,13 +136,13 @@ for index, su in stackunit_status.iteritems():
     uptime = dell_parse_snmp_uptime(su[uptime_label].value)
     if uptime < uptime_warn:
         if uptime < uptime_crit:
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
                     'Stack-unit {} uptime less than {} seconds!'.format(index, uptime_crit))
         else:
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_WARN,
@@ -153,13 +153,13 @@ for index, su in stackunit_status.iteritems():
     for psu_id in xrange(1, num_psus+1):
         psu_oper_status = my_snmp_get_int(args, oid_psu_oper.format(index, psu_id))
         if psu_oper_status == 2:  # down
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
                     'Stack-unit {} PSU {} down!'.format(index, psu_id))
         elif psu_oper_status == 3:  # absent
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_WARN,
@@ -168,13 +168,13 @@ for index, su in stackunit_status.iteritems():
             psu_usage = my_snmp_get_int(args, oid_psu_usage.format(index, psu_id))
             if psu_usage > psu_usage_warn_percent:
                 if psu_usage > psu_usage_crit_percent:
-                    trigger_not_ok(
+                    status, statusstr = trigger_not_ok(
                             status,
                             statusstr,
                             STATE_CRIT,
                             'Stack-unit {} PSU {} high PSU usage ({}%)'.format(index, psu_id, psu_usage))
                 else:
-                    trigger_not_ok(
+                    status, statusstr = trigger_not_ok(
                             status,
                             statusstr,
                             STATE_WARN,
@@ -185,13 +185,13 @@ for index, su in stackunit_status.iteritems():
     for fan_id in xrange(1, num_fans+1):
         fan_oper_status = my_snmp_get_int(args, oid_fans_oper.format(index, fan_id))
         if fan_oper_status == 2:  # down
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
                     'Stack-unit {} Fan {} down!'.format(index, fan_id))
         elif fan_oper_status == 3:  # absent
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_WARN,
@@ -201,13 +201,13 @@ for index, su in stackunit_status.iteritems():
     if not f10:
         cpu_usage = my_snmp_get_int(args, oid_cpu_usage.format(index))
         if cpu_usage > cpu_usage_crit_percent:
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
                     'Stack-unit {} high CPU usage ({}%)'.format(index, cpu_usage))
         elif cpu_usage > cpu_usage_warn_percent:
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_WARN,
@@ -217,26 +217,26 @@ for index, su in stackunit_status.iteritems():
     if not f10:
         mem_usage = my_snmp_get_int(args, oid_mem_usage.format(index))
         if mem_usage > mem_usage_crit_percent:
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_CRIT,
                     'Stack-unit {} high memory usage ({}%)'.format(index, mem_usage))
         elif mem_usage > mem_usage_warn_percent:
-            trigger_not_ok(
+            status, statusstr = trigger_not_ok(
                     status,
                     statusstr,
                     STATE_WARN,
                     'Stack-unit {} high memory usage ({}%)'.format(index, mem_usage))
 
 if num_mgmt_units < 1:
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
             'No active management unit!')
 elif num_mgmt_units > 1:
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,

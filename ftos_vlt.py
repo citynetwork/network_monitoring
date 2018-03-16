@@ -45,13 +45,13 @@ for index, vltdomain in data.iteritems():
     vlt_domain_id = int(str(index))
     peer_status = int(str(vltdomain['dellNetVLTPeerStatus'].value))
     if peer_status == 0:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 'VLT domain {}: Peer session is not established'.format(vlt_domain_id))
     if peer_status in [2, 3]:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
@@ -59,13 +59,13 @@ for index, vltdomain in data.iteritems():
 
     icl_status = int(str(vltdomain['dellNetVLTIclStatus'].value))
     if peer_status == 0:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 'VLT domain {}: ICL link is not established'.format(vlt_domain_id))
     if peer_status in [2, 3]:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
@@ -73,13 +73,13 @@ for index, vltdomain in data.iteritems():
 
     hbeat_status = int(str(vltdomain['dellNetVLTHBeatStatus'].value))
     if peer_status == 0:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 'VLT domain {}: Heartbeat link is not established'.format(vlt_domain_id))
     if peer_status in [2, 3]:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
@@ -87,7 +87,7 @@ for index, vltdomain in data.iteritems():
 
     icl_bwstatus = int(str(vltdomain['dellNetVLTIclBwStatus'].value))
     if icl_bwstatus == 1:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,

@@ -43,7 +43,7 @@ for index in data:
         if pwr_adminstatus.value == 1:
             pass  # ok
         elif pwr_adminstatus == 2:
-            trigger_not_ok(status, statusstr, STATE_WARN, "PowerAdminStatus Off for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_WARN, "PowerAdminStatus Off for {0}".format(descr))
         elif pwr_adminstatus == 3:
             pass  # ok - PoE stuff
         elif pwr_adminstatus == 4:
@@ -67,27 +67,27 @@ for index in data:
     if 'NOSUCHINSTANCE' not in pwr_operstatus.value:
         pwr_operstatus.value = int(str(pwr_operstatus.value))
         if pwr_operstatus.value == 1:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to unknown problems for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to unknown problems for {0}".format(descr))
         if pwr_operstatus.value == 2:
             pass  # ok
         if pwr_operstatus.value == 3:
-            trigger_not_ok(status, statusstr, STATE_WARN, "PowerOperStatus Admin off for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_WARN, "PowerOperStatus Admin off for {0}".format(descr))
         if pwr_operstatus.value == 4:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to insufficient system power for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to insufficient system power for {0}".format(descr))
         if pwr_operstatus.value == 5:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to power issues for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to power issues for {0}".format(descr))
         if pwr_operstatus.value == 6:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to temperature issues for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to temperature issues for {0}".format(descr))
         if pwr_operstatus.value == 7:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to fan issues for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to fan issues for {0}".format(descr))
         if pwr_operstatus.value == 8:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off because of failure for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off because of failure for {0}".format(descr))
         if pwr_operstatus.value == 9:
-            trigger_not_ok(status, statusstr, STATE_WARN, "PowerOperStatus on but fan has failed for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_WARN, "PowerOperStatus on but fan has failed for {0}".format(descr))
         if pwr_operstatus.value == 10:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off/cooling for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off/cooling for {0}".format(descr))
         if pwr_operstatus.value == 11:
-            trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to connector ratings for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, "PowerOperStatus off due to connector ratings for {0}".format(descr))
 
     # entSensorStatus
     # 1=ok, 2=unavailable, 3=nonoperational
@@ -99,9 +99,9 @@ for index in data:
         elif sensorstatus.value == 2 and 'transceiver' in descr.lower():
             pass  # Also ok, because all transceivers are not equipped with that
         elif sensorstatus.value == 2:
-            trigger_not_ok(status, statusstr, STATE_WARN, " Unavailable sensor status for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_WARN, " Unavailable sensor status for {0}".format(descr))
         elif sensorstatus.value == 3:
-            trigger_not_ok(status, statusstr, STATE_CRIT, " Nonoperational sensor status for {0}".format(descr))
+            status, statusstr = trigger_not_ok(status, statusstr, STATE_CRIT, " Nonoperational sensor status for {0}".format(descr))
 
 # All checks completed, exiting with the relevant message
 check_if_ok(status, statusstr)

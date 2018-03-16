@@ -63,7 +63,7 @@ for index, peer in data.iteritems():
 
     admin_state = int(str(admin_state))
     if admin_state == 1:  # Down
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
@@ -71,7 +71,7 @@ for index, peer in data.iteritems():
         continue
     bgp_state = int(str(bgp_state))
     if bgp_state in [0, 1, 2, 3, 4, 5]:  # none/idle/connect/active/opensent/openconfirm
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
@@ -79,7 +79,7 @@ for index, peer in data.iteritems():
         continue
     statusstr = last_error
 if not peer_found:
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,

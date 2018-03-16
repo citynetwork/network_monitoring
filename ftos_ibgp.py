@@ -50,7 +50,7 @@ for index, peer in data.iteritems():
 
     bgp_fsm_state = int(str(peer['dellNetBgpM2PeerStatus'].value))
     if bgp_fsm_state == 1:  # 1=halted, 2=running
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_WARN,
@@ -59,7 +59,7 @@ for index, peer in data.iteritems():
 
     peer_state = int(str(peer['dellNetBgpM2PeerState'].value))
     if peer_state in [1, 2, 3, 4, 5]:  # idle/connect/active/opensent/openconfirm, 6=established
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,

@@ -63,13 +63,14 @@ def trigger_not_ok(status, statusstr, req_state, txt):
     if req_state > status:
         status = req_state
     statusstr += txt + ","
+    return [status, statusstr]
 
 
 # Status check and alert wrapper
 def check_if_ok(status, statusstr):
-    global status_txt_wrapper
+    global status_txt_mapper
     if status != STATE_OK:
-        print "{}:{}".format(status_txt_wrapper[status], statusstr)
+        print "{}: {}".format(status_txt_mapper[status], statusstr)
         sys.exit(status)
     else:
         statusstr = ""

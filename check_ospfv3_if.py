@@ -58,14 +58,14 @@ for nei in rawdata:
     num_neis += 1
     nei_state = int(str(nei.value))
     if nei_state not in ospfv3_ok_states:
-        trigger_not_ok(
+        status, statusstr = trigger_not_ok(
                 status,
                 statusstr,
                 STATE_CRIT,
                 "Neighbour {} on interface {} down".format(num_neis, args.i))
 
 if num_neis < 1:
-    trigger_not_ok(
+    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
