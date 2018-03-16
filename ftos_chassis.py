@@ -32,10 +32,10 @@ oid_device_type = 'DELL-NETWORKING-CHASSIS-MIB::dellNetDeviceType.0'
 oid_stack_num_units = 'DELL-NETWORKING-CHASSIS-MIB::dellNetNumStackUnits.0'
 oids_stack_status = [
         'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitNumber',
-        'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitMgmtStatus',
         'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitStatus',
         'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitUpTime'
 ]
+oid_mgmt_status = 'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitMgmtStatus.{}'
 oid_num_psus = 'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitNumPowerSupplies.{}'
 oid_num_fans = 'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitNumFanTrays.{}'
 
@@ -49,10 +49,10 @@ oid_cpu_usage = '.1.3.6.1.4.1.6027.3.26.1.4.4.1.4.2.{}.1'  # dellNetCpuUtil1Min
 f10_oid_stack_num_units = 'F10-S-SERIES-CHASSIS-MIB::chNumStackUnits.0'
 f10_oids_stack_status = [
         'F10-S-SERIES-CHASSIS-MIB::chStackUnitNumber',
-        'F10-S-SERIES-CHASSIS-MIB::chStackUnitMgmtStatus',
         'F10-S-SERIES-CHASSIS-MIB::chStackUnitStatus',
         'F10-S-SERIES-CHASSIS-MIB::chStackUnitUpTime'
 ]
+f10_oid_mgmt_status = 'F10-S-SERIES-CHASSIS-MIB::chStackUnitMgmtStatus.{}'
 f10_oid_num_psus = 'F10-S-SERIES-CHASSIS-MIB::chStackUnitNumPowerSupplies.{}'
 f10_oid_num_fans = 'F10-S-SERIES-CHASSIS-MIB::chStackUnitNumFanTrays.{}'
 f10_oid_psu_oper = 'F10-S-SERIES-CHASSIS-MIB::chSysPowerSupplyOperStatus.{}.{}'
@@ -69,6 +69,7 @@ if device_type.value == u'NOSUCHOBJECT' or device_type.value == u'NOSUCHINSTANCE
     oid_num_fans = f10_oid_num_fans
     oid_psu_oper = f10_oid_psu_oper
     oid_fans_oper = f10_oid_fans_oper
+    oid_mgmt_status = f10_oid_mgmt_status
 else:
     f10 = False
 
@@ -81,11 +82,9 @@ statusstr = ""
 stackunit_status = snmpresult_to_dict(raw_stackunit_status)
 num_mgmt_units = 0
 for index, su in stackunit_status.iteritems():
-    if f10:
-        mgmt_status_label = 'chStackUnitMgmtStatus'
-    else:
-        mgmt_status_label = 'dellNetStackUnitMgmtStatus'
-    if su[mgmt_status_label].value == u'1':
+
+    mgmt_status = my_snmp_get(args, oid_mgmt_status.format(index))
+    if mgmt_status.value == u'1':
         num_mgmt_units += 1
 
     if f10:
