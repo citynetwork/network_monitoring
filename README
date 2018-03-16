@@ -31,4 +31,5 @@ Dell (former Force10) FTOS:
 	ftos_vlt.py
 	ftos_bgp_peer.py
 	ftos_ibgp.py
+	ftos_lag.py
 	check_ospf.py
