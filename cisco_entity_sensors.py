@@ -13,7 +13,7 @@ from lib.cnh_nm import trigger_not_ok, check_if_ok
 
 
 # Argument parsing
-parser = argparse.ArgumentParser(description='Check environment of IOS-XR routers')
+parser = argparse.ArgumentParser(description='Check environment of Cisco devices')
 parser.add_argument('-C', metavar='<community>', required=True,
                     help='SNMP Community')
 parser.add_argument('-H', metavar='<host>', required=True,
