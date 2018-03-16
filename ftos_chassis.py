@@ -23,8 +23,6 @@ args = parser.parse_args()
 # Vars
 uptime_crit = 600
 uptime_warn = 1800
-psu_usage_warn_percent = 75
-psu_usage_crit_percent = 90
 cpu_usage_warn_percent = 85
 cpu_usage_crit_percent = 95
 mem_usage_warn_percent = 75
@@ -43,7 +41,6 @@ oid_num_fans = 'DELL-NETWORKING-CHASSIS-MIB::dellNetStackUnitNumFanTrays.{}'
 
 # Does not work with symbolic oids in easysnmp (but it does work with commandline snmpget)
 oid_psu_oper = '.1.3.6.1.4.1.6027.3.26.1.4.6.1.4.2.{}.{}'  # dellNetPowerSupplyOperStatus
-oid_psu_usage = '.1.3.6.1.4.1.6027.3.26.1.4.6.1.10.2.{}.{}'  # dellNetPowerSupplyUsage
 oid_fans_oper = '.1.3.6.1.4.1.6027.3.26.1.4.7.1.4.2.{}.{}'  # dellNetFanTrayOperStatus
 oid_mem_usage = '.1.3.6.1.4.1.6027.3.26.1.4.4.1.6.2.{}.1'  # dellNetCpuUtilMemUsage
 oid_cpu_usage = '.1.3.6.1.4.1.6027.3.26.1.4.4.1.4.2.{}.1'  # dellNetCpuUtil1Min
@@ -164,21 +161,6 @@ for index, su in stackunit_status.iteritems():
                     statusstr,
                     STATE_WARN,
                     'Stack-unit {} PSU {} absent'.format(index, psu_id))
-        if not f10:
-            psu_usage = my_snmp_get_int(args, oid_psu_usage.format(index, psu_id))
-            if psu_usage > psu_usage_warn_percent:
-                if psu_usage > psu_usage_crit_percent:
-                    status, statusstr = trigger_not_ok(
-                            status,
-                            statusstr,
-                            STATE_CRIT,
-                            'Stack-unit {} PSU {} high PSU usage ({}%)'.format(index, psu_id, psu_usage))
-                else:
-                    status, statusstr = trigger_not_ok(
-                            status,
-                            statusstr,
-                            STATE_WARN,
-                            'Stack-unit {} PSU {} high PSU usage ({}%)'.format(index, psu_id, psu_usage))
 
     # Fans
     num_fans = my_snmp_get_int(args, oid_num_fans.format(index))
