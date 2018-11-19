@@ -22,10 +22,10 @@ args = parser.parse_args()
 
 vlt_detection_oid = 'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTDomainId'
 oids = [
-        'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTPeerStatus',
-        'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTIclStatus',
-        'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTHBeatStatus',
-        'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTIclBwStatus'
+    'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTPeerStatus',
+    'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTIclStatus',
+    'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTHBeatStatus',
+    'DELL-NETWORKING-VIRTUAL-LINK-TRUNK-MIB::dellNetVLTIclBwStatus'
 ]
 
 
@@ -46,52 +46,52 @@ for index, vltdomain in data.iteritems():
     peer_status = int(str(vltdomain['dellNetVLTPeerStatus'].value))
     if peer_status == 0:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: Peer session is not established'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: Peer session is not established'.format(vlt_domain_id))
     if peer_status in [2, 3]:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: Peer is down!'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: Peer is down!'.format(vlt_domain_id))
 
     icl_status = int(str(vltdomain['dellNetVLTIclStatus'].value))
     if peer_status == 0:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: ICL link is not established'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: ICL link is not established'.format(vlt_domain_id))
     if peer_status in [2, 3]:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: ICL link is down!'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: ICL link is down!'.format(vlt_domain_id))
 
     hbeat_status = int(str(vltdomain['dellNetVLTHBeatStatus'].value))
     if peer_status == 0:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: Heartbeat link is not established'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: Heartbeat link is not established'.format(vlt_domain_id))
     if peer_status in [2, 3]:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: Heartbeat link is down!'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: Heartbeat link is down!'.format(vlt_domain_id))
 
     icl_bwstatus = int(str(vltdomain['dellNetVLTIclBwStatus'].value))
     if icl_bwstatus == 1:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'VLT domain {}: ICL Bandwidth usage above threshold!'.format(vlt_domain_id))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'VLT domain {}: ICL Bandwidth usage above threshold!'.format(vlt_domain_id))
 
 
 check_if_ok(status, statusstr)

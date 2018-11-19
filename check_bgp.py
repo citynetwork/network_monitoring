@@ -31,10 +31,10 @@ if ':' in args.p:
 
 
 oids = [
-            'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
-            'CISCO-BGP4-MIB::cbgpPeer2State',
-            'CISCO-BGP4-MIB::cbgpPeer2LastErrorTxt',
-            'CISCO-BGP4-MIB::cbgpPeer2RemoteAs'
+    'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
+    'CISCO-BGP4-MIB::cbgpPeer2State',
+    'CISCO-BGP4-MIB::cbgpPeer2LastErrorTxt',
+    'CISCO-BGP4-MIB::cbgpPeer2RemoteAs'
 ]
 
 
@@ -64,26 +64,26 @@ for index, peer in data.iteritems():
     admin_state = int(str(admin_state))
     if admin_state == 1:  # Down
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                "{}(AS{}) admin down".format(orig_args_p, remote_as))
+            status,
+            statusstr,
+            STATE_WARN,
+            "{}(AS{}) admin down".format(orig_args_p, remote_as))
         continue
     bgp_state = int(str(bgp_state))
     if bgp_state in [0, 1, 2, 3, 4, 5]:  # none/idle/connect/active/opensent/openconfirm
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                "{}(AS{}) BGP session down".format(orig_args_p, remote_as))
+            status,
+            statusstr,
+            STATE_CRIT,
+            "{}(AS{}) BGP session down".format(orig_args_p, remote_as))
         continue
     statusstr = last_error
 if not peer_found:
     status, statusstr = trigger_not_ok(
-            status,
-            statusstr,
-            STATE_CRIT,
-            "BGP session for peer {} not found!".format(orig_args_p))
+        status,
+        statusstr,
+        STATE_CRIT,
+        "BGP session for peer {} not found!".format(orig_args_p))
 
 
 # All checks completed, exiting with the relevant message

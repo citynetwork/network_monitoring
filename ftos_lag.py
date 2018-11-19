@@ -33,10 +33,10 @@ def ftos_parse_lag_active_ports(portlist):
 
 # Get all LAG ports
 oids = [
-        'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgNumPorts',
-        'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgOperStatus',
-        'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgIfIndex',
-        'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgPortListString'
+    'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgNumPorts',
+    'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgOperStatus',
+    'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgIfIndex',
+    'DELL-NETWORKING-LINK-AGGREGATION-MIB::dot3aAggCfgPortListString'
 ]
 rawdata = my_snmp_walk(args, oids)
 data = snmpresult_to_dict(rawdata)
@@ -51,34 +51,34 @@ for index, lag in data.iteritems():
     num_ports = int(str(lag['dot3aAggCfgNumPorts'].value))
     if num_ports < 1:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                '{} has no configured members'.format(lag_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            '{} has no configured members'.format(lag_name))
         continue
 
     active_ports = ftos_parse_lag_active_ports(lag['dot3aAggCfgPortListString'].value)
     if active_ports < num_ports and active_ports > 1:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                '{}: Only {} ports of configured {} is up'.format(lag_name, active_ports, num_ports))
+            status,
+            statusstr,
+            STATE_WARN,
+            '{}: Only {} ports of configured {} is up'.format(lag_name, active_ports, num_ports))
     elif active_ports < 1:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                '{}: All ports down'.format(lag_name))
+            status,
+            statusstr,
+            STATE_CRIT,
+            '{}: All ports down'.format(lag_name))
         continue
 
     oper_status = int(str(lag['dot3aAggCfgOperStatus'].value))
     if oper_status == 2:  # 1=up, 2=down
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                '{} is down'.format(lag_name))
+            status,
+            statusstr,
+            STATE_CRIT,
+            '{} is down'.format(lag_name))
 
 
 # All done, check status and exit

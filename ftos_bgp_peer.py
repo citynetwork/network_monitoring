@@ -25,12 +25,12 @@ args = parser.parse_args()
 
 # Get all BGP peers
 oids = [
-        'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerIdentifier',
-        'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerState',
-        'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerStatus',
-        'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerRemoteAddrType',
-        'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerRemoteAddr',
-        'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerRemoteAs'
+    'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerIdentifier',
+    'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerState',
+    'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerStatus',
+    'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerRemoteAddrType',
+    'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerRemoteAddr',
+    'DELL-NETWORKING-BGP4-V2-MIB::dellNetBgpM2PeerRemoteAs'
 ]
 rawdata = my_snmp_walk(args, oids)
 data = snmpresult_to_dict(rawdata)
@@ -52,19 +52,19 @@ for index, peer in data.iteritems():
     bgp_fsm_state = int(str(peer['dellNetBgpM2PeerStatus'].value))
     if bgp_fsm_state == 1:  # 1=halted, 2=running
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                "{}({}) BGP Admin down".format(peername, peer_as))
+            status,
+            statusstr,
+            STATE_WARN,
+            "{}({}) BGP Admin down".format(peername, peer_as))
         break
 
     peer_state = int(str(peer['dellNetBgpM2PeerState'].value))
     if peer_state in [1, 2, 3, 4, 5]:  # idle/connect/active/opensent/openconfirm, 6=established
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                "{}({}) BGP session down".format(peername, peer_as))
+            status,
+            statusstr,
+            STATE_CRIT,
+            "{}({}) BGP session down".format(peername, peer_as))
     break
 
 if not peer_found:

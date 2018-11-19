@@ -27,10 +27,10 @@ local_as = my_snmp_get(args, 'BGP4-MIB::bgpLocalAs.0').value
 
 # Get all BGP peers
 oids = [
-        'CISCO-BGP4-MIB::cbgpPeer2RemoteAs',
-        'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
-        'CISCO-BGP4-MIB::cbgpPeer2State',
-        'CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier'
+    'CISCO-BGP4-MIB::cbgpPeer2RemoteAs',
+    'CISCO-BGP4-MIB::cbgpPeer2AdminStatus',
+    'CISCO-BGP4-MIB::cbgpPeer2State',
+    'CISCO-BGP4-MIB::cbgpPeer2RemoteIdentifier'
 ]
 rawdata = my_snmp_walk(args, oids)
 data = snmpresult_to_dict(rawdata)
@@ -49,17 +49,17 @@ for index, peer in data.iteritems():
     bgp_state = peer['cbgpPeer2State'].value
     if admin_state == 1:  # Down
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                "{} admin down".format(peername))
+            status,
+            statusstr,
+            STATE_WARN,
+            "{} admin down".format(peername))
         continue
     if bgp_state in [0, 1, 2, 3, 4, 5]:  # none/idle/connect/active/opensent/openconfirm
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                "{} BGP session down".format(peername))
+            status,
+            statusstr,
+            STATE_CRIT,
+            "{} BGP session down".format(peername))
         continue
 
 

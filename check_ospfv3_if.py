@@ -14,14 +14,14 @@ from lib.cnh_nm import trigger_not_ok, check_if_ok
 
 # Vars
 ospfv3_statemappings = {
-        1: 'down',
-        2: 'attempt',
-        3: 'init',
-        4: 'twoway',
-        5: 'exchangestart',
-        6: 'exchange',
-        7: 'loading',
-        8: 'full'
+    1: 'down',
+    2: 'attempt',
+    3: 'init',
+    4: 'twoway',
+    5: 'exchangestart',
+    6: 'exchange',
+    7: 'loading',
+    8: 'full'
 }
 ospfv3_ok_states = [4, 8]
 
@@ -59,17 +59,17 @@ for nei in rawdata:
     nei_state = int(str(nei.value))
     if nei_state not in ospfv3_ok_states:
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                "Neighbour {} on interface {} down".format(num_neis, args.i))
-
-if num_neis < 1:
-    status, statusstr = trigger_not_ok(
             status,
             statusstr,
             STATE_CRIT,
-            "CRITICAL: No OSPFv3 neighbours found on interface {}".format(args.i))
+            "Neighbour {} on interface {} down".format(num_neis, args.i))
+
+if num_neis < 1:
+    status, statusstr = trigger_not_ok(
+        status,
+        statusstr,
+        STATE_CRIT,
+        "CRITICAL: No OSPFv3 neighbours found on interface {}".format(args.i))
 
 
 # Check status

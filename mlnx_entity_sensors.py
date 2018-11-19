@@ -44,18 +44,18 @@ def check_entity_state(index, entity_name):
     oper_status = my_snmp_get_int(args, oid_state_oper.format(index))
     if oper_status == 2:  # disabled
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'Entity {} is in a disabled state'.format(entity_name))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'Entity {} is in a disabled state'.format(entity_name))
 
     usage_status = my_snmp_get_int(args, oid_state_usage.format(index))
     if usage_status == 4:  # busy
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'Entity {} is fully utilized, no capacity left'.format(entity_name))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'Entity {} is fully utilized, no capacity left'.format(entity_name))
 
     alarm_status = my_snmp_get(args, oid_state_alarm.format(index)).value.encode('latin1')
     alarm_bit = unpack("B", alarm_status)[0]
@@ -63,40 +63,40 @@ def check_entity_state(index, entity_name):
         return
     elif alarm_bit == 1:  # underRepair
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                'Entity {} is undergoing repair'.format(entity_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            'Entity {} is undergoing repair'.format(entity_name))
     elif alarm_bit == 2:  # Critical
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'Entity {} is in critical state'.format(entity_name))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'Entity {} is in critical state'.format(entity_name))
     elif alarm_bit == 3:  # Major
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_CRIT,
-                'Entity {} is in major alarm state'.format(entity_name))
+            status,
+            statusstr,
+            STATE_CRIT,
+            'Entity {} is in major alarm state'.format(entity_name))
     elif alarm_bit == 4:  # Minor
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                'Entity {} is in minor alarm state'.format(entity_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            'Entity {} is in minor alarm state'.format(entity_name))
     elif alarm_bit == 5:  # Warning
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                'Entity {} is in warning state'.format(entity_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            'Entity {} is in warning state'.format(entity_name))
     elif alarm_bit == 6:  # Indeterminate
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                'Entity {} is in an indeterminative state'.format(entity_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            'Entity {} is in an indeterminative state'.format(entity_name))
 
 
 # Checking operational status of a sensor
@@ -109,16 +109,16 @@ def check_sensor_oper_status(index, sensor_name):
         return
     elif oper_status.value == u'2':  # Unavailable
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                '{} sensor status: Unavailable'.format(sensor_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            '{} sensor status: Unavailable'.format(sensor_name))
     elif oper_status.value == u'3':  # Non-operational
         status, statusstr = trigger_not_ok(
-                status,
-                statusstr,
-                STATE_WARN,
-                '{} sensor status: Non-operational'.format(sensor_name))
+            status,
+            statusstr,
+            STATE_WARN,
+            '{} sensor status: Non-operational'.format(sensor_name))
 
 
 # Get all environmental modules and put in a nicely ordered dict
