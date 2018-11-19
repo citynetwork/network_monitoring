@@ -20,7 +20,7 @@ except ImportError:
     print "Unmet dependencies, the following external dependencies are required: {}".format(deplist)
 
 
-from ftputil import FTPHost
+from ftputil import FTPHost  # noqa
 
 
 print "Downloading required mibs..."
