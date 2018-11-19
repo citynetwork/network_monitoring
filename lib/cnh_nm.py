@@ -20,10 +20,10 @@ STATE_CRIT = 2
 STATE_UNKNOWN = 3
 
 status_txt_mapper = {
-        0: 'OK',
-        1: 'WARNING',
-        2: 'CRITICAL',
-        3: 'UNKNOWN'
+    0: 'OK',
+    1: 'WARNING',
+    2: 'CRITICAL',
+    3: 'UNKNOWN'
 }
 
 
@@ -90,12 +90,12 @@ def parse_snmp_datetime(input):
     octval = input.encode('latin1')
     dt_tuple = unpack('>HBBBBBB', octval)
     dt = "{}-{}-{} {}:{}:{}.0".format(
-            dt_tuple[0],
-            str(dt_tuple[1]).zfill(2),
-            str(dt_tuple[2]).zfill(2),
-            str(dt_tuple[3]).zfill(2),
-            str(dt_tuple[4]).zfill(2),
-            str(dt_tuple[5]).zfill(2),
+        dt_tuple[0],
+        str(dt_tuple[1]).zfill(2),
+        str(dt_tuple[2]).zfill(2),
+        str(dt_tuple[3]).zfill(2),
+        str(dt_tuple[4]).zfill(2),
+        str(dt_tuple[5]).zfill(2),
     )
     return dt
 
