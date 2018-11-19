@@ -1,8 +1,10 @@
 #!/bin/sh
 
 for A in *.py lib/*.py; do
-	echo "$A:"
-	pyflakes $A
-	echo
-	echo
+	res=$(pyflakes $A)
+	if [ $? -ne 0 ]; then
+	  echo $res
+	  echo
+	  echo
+	fi
 done
