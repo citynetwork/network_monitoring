@@ -70,11 +70,8 @@ def trigger_not_ok(status, statusstr, req_state, txt):
 def check_if_ok(status, statusstr):
     global status_txt_mapper
     if status != STATE_OK:
-        print "{}: {}".format(status_txt_mapper[status], statusstr)
+        print "{}: {}".format(status_txt_mapper[status], statusstr.rstrip(","))
         sys.exit(status)
-    else:
-        statusstr = ""
-        status = None
 
 
 # Re-formatting the SNMP walk result into something more workable
