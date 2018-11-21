@@ -52,6 +52,24 @@ def my_snmp_walk(args, oids):
     return retval
 
 
+# SNMPv3 get wrapper
+def my_snmp_get_v3(args, oid, context=""):
+    try:
+        retval = snmp_get(oid, hostname=args.H, security_level=args.l, security_username=args.u, auth_protocol=args.a, auth_password=args.A, privacy_protocol=args.x, privacy_password=args.X, context=context, version=3)
+    except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
+        snmp_err(err)
+    return retval
+
+
+# SNMPv3 walk wrapper
+def my_snmp_walk_v3(args, oids, context="", use_sprint_value=False):
+    try:
+        retval = snmp_bulkwalk(oids, hostname=args.H, security_level=args.l, security_username=args.u, auth_protocol=args.a, auth_password=args.A, privacy_protocol=args.x, privacy_password=args.X, context=context, version=3, use_sprint_value=use_sprint_value)
+    except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
+        snmp_err(err)
+    return retval
+
+
 # Getting an integer value and nothing else
 def my_snmp_get_int(args, oid):
     retval = my_snmp_get(args, oid)
@@ -156,3 +174,13 @@ def ftos_get_peer_ip(peeraddr, peeraddr_type):
             i += 1
         ip6 = ip_address(unicode(ip6_decoded.rstrip(':')))
         return str(ip6.compressed)
+
+
+# Translate OID to ASCII string
+def snmp_translate_oid2string(index):
+    ret = ""
+    for byte in index.split("."):
+        intbyte = int(byte)
+        if intbyte > 32 and intbyte < 127:
+            ret += str(unichr(intbyte))
+    return ret
