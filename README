@@ -33,6 +33,7 @@ Cisco NX-OS:
 	cisco_vpc.py
 	nxos_ospf_if.py
 	nxos_ospf_nei.py
+	nxos_ospfv3_if.py
 
 Dell (former Force10) FTOS:
 	ftos_chassis.py
