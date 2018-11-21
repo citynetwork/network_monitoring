@@ -29,11 +29,10 @@ Cisco IOS-XR:
 Cisco NX-OS:
 	check_bgp.py
 	check_ibgp.py
-	check_mpls_l2vpn.py
-	check_ospf.py
-	check_ospfv3_if.py
 	cisco_entity_sensors.py
 	cisco_vpc.py
+	nxos_ospf_if.py
+	nxos_ospf_nei.py
 
 Dell (former Force10) FTOS:
 	ftos_chassis.py
