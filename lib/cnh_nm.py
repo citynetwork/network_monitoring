@@ -35,27 +35,27 @@ def snmp_err(err):
 
 
 # SNMP get wrapper with error handling
-def my_snmp_get(args, oid):
+def my_snmp_get(args, oid, use_sprint_value=False):
     try:
-        retval = snmp_get(oid, hostname=args.H, community=args.C, version=2)
+        retval = snmp_get(oid, hostname=args.H, community=args.C, version=2, use_sprint_value=use_sprint_value)
     except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
         snmp_err(err)
     return retval
 
 
 # SNMP walk wrapper
-def my_snmp_walk(args, oids):
+def my_snmp_walk(args, oids, use_sprint_value=False):
     try:
-        retval = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2)
+        retval = snmp_bulkwalk(oids, hostname=args.H, community=args.C, version=2, use_sprint_value=use_sprint_value)
     except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
         snmp_err(err)
     return retval
 
 
 # SNMPv3 get wrapper
-def my_snmp_get_v3(args, oid, context=""):
+def my_snmp_get_v3(args, oid, context="", use_sprint_value=False):
     try:
-        retval = snmp_get(oid, hostname=args.H, security_level=args.l, security_username=args.u, auth_protocol=args.a, auth_password=args.A, privacy_protocol=args.x, privacy_password=args.X, context=context, version=3)
+        retval = snmp_get(oid, hostname=args.H, security_level=args.l, security_username=args.u, auth_protocol=args.a, auth_password=args.A, privacy_protocol=args.x, privacy_password=args.X, context=context, version=3, use_sprint_value=use_sprint_value)
     except (EasySNMPConnectionError, EasySNMPTimeoutError) as err:
         snmp_err(err)
     return retval
