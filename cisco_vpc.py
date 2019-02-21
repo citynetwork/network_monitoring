@@ -8,7 +8,7 @@
 import argparse
 import re
 import sys
-from lib.cnh_nm import STATE_OK, STATE_CRIT, STATE_WARN, STATE_UNKNOWN
+from lib.cnh_nm import STATE_OK, STATE_CRIT, STATE_WARN
 from lib.cnh_nm import trigger_not_ok, check_if_ok, my_snmp_walk, my_snmp_get
 from lib.cnh_nm import snmpresult_to_dict
 
@@ -46,8 +46,8 @@ statusstr = ""
 # Check VPC general status and the status of peer-links
 rawdata = my_snmp_walk(args, oids)
 if not rawdata:
-    print "UNKNOWN: Switch does not implement Cisco VPC, or does not have it enabled."
-    sys.exit(STATE_UNKNOWN)
+    print "OK: Switch does not implement Cisco VPC, or does not have it enabled."
+    sys.exit(STATE_OK)
 data = snmpresult_to_dict(rawdata)
 vpc_domain_ids = []
 for vpc_domain in data:
