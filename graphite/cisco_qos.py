@@ -99,7 +99,7 @@ for qos_interface in qos_interfaces:
                 send_metrics(
                     "qos.{}.{}.{}.{}.{}".format(
                         args.H,  # hostname
-                        ifmib_name.value,  # interface name
+                        ifmib_name.value.replace('/', '_'),  # interface name
                         policy_map_name,  # policy-map name
                         class_maps[qcim_value],  # class-map name
                         statsname  # Key for the value
