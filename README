@@ -17,6 +17,7 @@ Cisco IOS:
 	check_ospf.py
 	check_ospfv3_if.py
 	cisco_entity_sensors.py (Works but very limited functionality)
+    check_ping_cisco_ssh.sh
 
 Cisco IOS-XR:
 	check_bgp.py
