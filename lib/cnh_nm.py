@@ -5,6 +5,7 @@
 # @author   Johan Hedberg <jh@citynetwork.se>
 #
 
+from __future__ import print_function
 import sys
 from collections import defaultdict
 from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPTimeoutError
@@ -30,7 +31,7 @@ status_txt_mapper = {
 # Handle (or rather not handle) SNMP errors
 def snmp_err(err):
     global STATE_UNKNOWN
-    print "UNKNOWN: SNMP Error: {0}".format(err)
+    print ("UNKNOWN: SNMP Error: {0}".format(err))
     sys.exit(STATE_UNKNOWN)
 
 
@@ -88,7 +89,7 @@ def trigger_not_ok(status, statusstr, req_state, txt):
 def check_if_ok(status, statusstr):
     global status_txt_mapper
     if status != STATE_OK:
-        print "{}: {}".format(status_txt_mapper[status], statusstr.rstrip(","))
+        print ("{}: {}".format(status_txt_mapper[status], statusstr.rstrip(",")))
         sys.exit(status)
 
 

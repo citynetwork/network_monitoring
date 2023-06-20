@@ -63,11 +63,11 @@ for host in hosts:
     raw_instances = my_snmp_walk(snmp_args, oids_instances)
     syncgroups = snmpresult_to_dict(raw_syncgroups)
     instances = snmpresult_to_dict(raw_instances)
-    for syncgroup_id, syncgroup in syncgroups.iteritems():
+    for syncgroup_id, syncgroup in syncgroups.items():
         syncgroup_name = syncgroup['vrrpSyncGroupName'].value
         syncgroup_state = int(str(syncgroup['vrrpSyncGroupState'].value))
         syncgroups_states[router_id][syncgroup_name] = syncgroup_state
-    for instance_id, instance in instances.iteritems():
+    for instance_id, instance in instances.items():
         instance_name = instance['vrrpInstanceName'].value
         instance_state = int(str(instance['vrrpInstanceState'].value))
         instance_preempt = int(str(instance['vrrpInstancePreempt'].value))
@@ -87,10 +87,10 @@ statusstr = ''
 expected_state = {}
 state_status_strs = []
 state_status = STATE_OK
-for host, syncgroups in syncgroups_states.iteritems():
+for host, syncgroups in syncgroups_states.items():
     if host not in expected_state:
         expected_state[host] = None
-    for sg_name, sg_state in syncgroups.iteritems():
+    for sg_name, sg_state in syncgroups.items():
         sg_state = vrrp_state_mapper[sg_state]
         state_status_strs.append('Syncgroup {} {}: {}'.format(host, sg_name, sg_state))
         if not expected_state[host]:
@@ -103,8 +103,8 @@ if state_status == STATE_CRIT:
 
 state_status_strs = []
 state_status = STATE_OK
-for host, instance in states.iteritems():
-    for instance_name, instance_state in instance.iteritems():
+for host, instance in states.items():
+    for instance_name, instance_state in instance.items():
         instance_state = vrrp_state_mapper[instance_state]
         state_status_strs.append('Instance {} {}: {}'.format(host, instance_name, instance_state))
         if not expected_state[host]:
@@ -117,8 +117,8 @@ if state_status == STATE_CRIT:
 
 preempt_status_strs = []
 preempt_status = STATE_OK
-for host, instance in preempt.iteritems():
-    for instance_name, instance_preempt in instance.iteritems():
+for host, instance in preempt.items():
+    for instance_name, instance_preempt in instance.items():
         if instance_preempt != 1:
             preempt_status = STATE_CRIT
             preempt_status_strs.append('Instance {} {} have preempt disabled.'.format(host, instance_name))
@@ -131,7 +131,7 @@ if preempt_status == STATE_CRIT:
 num_masters = 0
 num_backups = 0
 masters = []
-for host, state in expected_state.iteritems():
+for host, state in expected_state.items():
     if state == 'master':
         num_masters += 1
         masters.append(host)
@@ -151,5 +151,5 @@ if num_backups < 1:
 
 # All done, exiting
 check_if_ok(status, statusstr)
-print "OK: {} masters ({}) and {} backups with no inconsistencies.".format(num_masters, ",".join(masters), num_backups)
+print ("OK: {} masters ({}) and {} backups with no inconsistencies.".format(num_masters, ",".join(masters), num_backups))
 sys.exit(STATE_OK)
