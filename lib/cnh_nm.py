@@ -5,6 +5,7 @@
 # @author   Johan Hedberg <jh@citynetwork.se>
 #
 
+from __future__ import print_function
 import sys
 from collections import defaultdict
 from easysnmp import snmp_get, snmp_bulkwalk, EasySNMPConnectionError, EasySNMPTimeoutError
